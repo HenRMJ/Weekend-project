@@ -1,10 +1,12 @@
 import { getCustomProperty, incrementCustomProperty, setCustomProperty } from "./updateCustomProperty.js";
 
 const dinoElement = document.querySelector('[data-dino]');
+const jumpSFX = new Audio('assets/sounds/jump.wav')
 const _JUMP_SPEED = .45;
 const _GRAVITY = .0015;
 const _DINO_FRAME_COUNT = 2;
 const _FRAME_TIME = 100;
+const _RELEASE_MULTIPLIER = .4;
 
 let isJumping;
 let dinoFrame;
@@ -17,7 +19,9 @@ export function setupDino() {
     currentFrameTime = 0;
     yVelocity = 0;
     setCustomProperty(dinoElement, "--bottom", 0);
-    document.addEventListener("keydown", onJump);
+    document.removeEventListener("keydown", onJump);
+    document.removeEventListener("keyup", onReleaseJump);
+    document.addEventListener("keyup", onReleaseJump);
     document.addEventListener("keydown", onJump);
 }
 
@@ -63,8 +67,17 @@ function handleJump(delta) {
 }
 
 function onJump(e) {
-    if (e.code !== "Space" || isJumping) {return}
+    if (e.code == "ArrowUp" && !isJumping 
+    || e.code == "Space" && !isJumping) {
+        yVelocity = _JUMP_SPEED;
+        jumpSFX.play();
+        isJumping = true;
+    }    
+}
 
-    yVelocity = _JUMP_SPEED;
-    isJumping = true;
+function onReleaseJump(e) {
+    if (yVelocity <= 0) {return}
+    if (e.code == "Space" || e.code == "ArrowUp") {
+        yVelocity *= _RELEASE_MULTIPLIER;
+    }
 }
