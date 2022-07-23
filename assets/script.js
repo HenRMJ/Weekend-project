@@ -8,7 +8,7 @@ const _SPEED_SCALE_INCREASE = .00001;
 
 const worldElem = document.querySelector('[data-world]');
 const scoreElement = document.querySelector('[data-score]');
-const startScreenElement = document.querySelector('[data-start-screen');
+const startScreenElement = document.querySelector('[data-start-screen]');
 
 setPixelToWorldScale();
 window.addEventListener("resize", setPixelToWorldScale);
